@@ -1,12 +1,19 @@
 import { Button, Flex, Heading, Input, Stack } from "@chakra-ui/react";
-import request from "../helpers/request";
+import { useContext } from "react";
+import { StoreContext } from "../StoreProvider";
+import GroceryItem from "../components/GroceryItem";
+
+export interface GroceryProps {
+    id: string,
+    image: string,
+    name: string,
+    quantity: string,
+    quantityType: string
+}
 
 const Groceries = () => {
-    const handleGetGroceries = async () => {
-        const { data } = await request.get('/groceries');
 
-        console.log(data.groceries)
-    };
+    const { groceries }: {groceries: Array<GroceryProps>} = useContext(StoreContext);
 
     return (
         <Stack width='100%' gap='30px'>
@@ -21,8 +28,13 @@ const Groceries = () => {
                 <Button variant='solid' colorScheme='teal'>
                     Add new grocery
                 </Button>
+                <Stack>
+                    {groceries.map((grocery) => (
+                        <GroceryItem
+                            name={grocery.name}
+                        />))}
+                </Stack>
             </Flex>
-            <Button onClick={handleGetGroceries}>get groceries</Button>
         </Stack>
     );
 }
