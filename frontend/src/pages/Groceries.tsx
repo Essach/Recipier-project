@@ -13,7 +13,7 @@ export interface GroceryProps {
 
 const Groceries = () => {
 
-    const { groceries }: {groceries: Array<GroceryProps>} = useContext(StoreContext);
+    const { groceries } = useContext(StoreContext);
 
     return (
         <Stack width='100%' gap='30px'>
@@ -28,13 +28,15 @@ const Groceries = () => {
                 <Button variant='solid' colorScheme='teal'>
                     Add new grocery
                 </Button>
-                <Stack>
-                    {groceries.map((grocery) => (
-                        <GroceryItem
-                            name={grocery.name}
-                        />))}
-                </Stack>
             </Flex>
+            <Stack>
+                {groceries.map((grocery: GroceryProps) => (
+                    <GroceryItem {...grocery}
+                        // id={grocery.id}
+                        // name={grocery.name}
+                        // image={grocery.image}
+                    />))}
+            </Stack>
         </Stack>
     );
 }

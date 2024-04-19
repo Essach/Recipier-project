@@ -1,13 +1,38 @@
-import { FC, createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import request from "./helpers/request";
+import { GroceryProps } from "./pages/Groceries";
 
-export const StoreContext = createContext(null);
+export type GlobalContent = {
+    groceries: Array<GroceryProps>
+    setGroceries:(c:Array<GroceryProps>) => void
+}
+export const StoreContext = createContext<GlobalContent>({
+    groceries: [],
+    setGroceries: () => {},
+})
 
-const StoreProvider:FC = () => {
-    const [groceries, setGroceries] = useState([]);
+const StoreProvider = ({children}: {children: React.ReactNode}) => {
+    const [groceries, setGroceries] = useState<Array<GroceryProps>>([]);
+
+    const fetchGroceriesData = async () => {
+        const { data, status } = await request.get('/groceries');
+
+        if (status === 200) {
+            setGroceries(data.groceries)
+        }
+    }
+
+    useEffect(() => {
+        fetchGroceriesData()
+    },[])
 
     return (
-        <div></div>
+        <StoreContext.Provider value={{
+            groceries: groceries,
+            setGroceries: setGroceries,
+        }}>
+            {children}
+        </StoreContext.Provider>
     );
 }
 
