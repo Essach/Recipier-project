@@ -1,5 +1,5 @@
-import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogHeader, Button, Flex, Heading, Input, Stack, useDisclosure } from "@chakra-ui/react";
-import { Reducer, useContext, useEffect, useReducer, useRef } from "react";
+import { Box, Button, Fade, Flex, Heading, Input, Stack, useDisclosure } from "@chakra-ui/react";
+import { useContext, useEffect, useReducer } from "react";
 import { StoreContext } from "../StoreProvider";
 import GroceryItem from "../components/GroceryItem";
 
@@ -26,8 +26,6 @@ const Groceries = () => {
     const { groceries } = useContext(StoreContext);
 
     const { isOpen, onOpen, onClose } = useDisclosure()
-    
-    const cancelRef = useRef(null)
 
     const changesLogReducer = (changesLog: Array<GroceryChange>, action: GroceryAction) => {
         const { type, payload } = action;
@@ -49,7 +47,12 @@ const Groceries = () => {
     const [changesLog, dispatch] = useReducer(changesLogReducer, [])
 
     useEffect(() => {
-        console.log(changesLog)
+        if (changesLog.length > 0) {
+            onOpen()
+        } else if (changesLog.length === 0) {
+            onClose()
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     },[changesLog])
 
     return (
@@ -75,21 +78,15 @@ const Groceries = () => {
                         />))}
                 </Stack>
             </Stack>
-            <AlertDialog
-                isOpen={isOpen}
-                leastDestructiveRef={cancelRef}
-                onClose={onClose}
-            >
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        Save changes?
-                    </AlertDialogHeader>
-                    <AlertDialogBody>
-                        <Button colorScheme="green" onClick={onClose}></Button>
-                        <Button colorScheme="red" ref={cancelRef} onClick={onClose}></Button>
-                    </AlertDialogBody>
-                </AlertDialogContent>
-            </AlertDialog>
+            <Fade in={isOpen}>
+                <Box position='fixed' bottom='15px' left='calc(50% - 250px)' w='500px' zIndex='5' backgroundColor='white' p='15px' rounded='md' shadow='lg'>
+                    <Heading size='lg' mb='20px'>Save changes?</Heading>
+                    <Box w='100%' display='flex' justifyContent='flex-end' gap='15px'>
+                        <Button colorScheme="green">Save</Button>
+                        <Button colorScheme="red">Discard changes</Button>
+                    </Box>
+                </Box>
+            </Fade>
         </>
     );
 }
