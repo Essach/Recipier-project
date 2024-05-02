@@ -2,6 +2,7 @@ import { Box, Button, Fade, Flex, Heading, Input, Stack, useDisclosure } from "@
 import { useContext, useEffect, useReducer } from "react";
 import { StoreContext } from "../StoreProvider";
 import GroceryItem from "../components/GroceryItem";
+import request from "../helpers/request";
 
 export interface GroceryProps {
     id: string,
@@ -26,7 +27,7 @@ const Groceries = () => {
     const { groceries } = useContext(StoreContext);
 
     const { isOpen, onOpen, onClose } = useDisclosure()
-
+    
     const changesLogReducer = (changesLog: Array<GroceryChange>, action: GroceryAction) => {
         const { type, payload } = action;
         switch (type) {
@@ -46,7 +47,31 @@ const Groceries = () => {
 
     const [changesLog, dispatch] = useReducer(changesLogReducer, [])
 
+    const handleSaveChanges = async () => {
+        // changesLog.forEach(async (changeData) => {
+        //     const { data, status } = await request.patch('groceries/quantity', {
+        //         groceryId: changeData.id,
+        //         updatedQuantity: changeData.newQuantity,
+        //     })
+
+        //     if (status === 200) {
+        //         console.log('updated groceries')
+        //     } else {
+        //         console.log(status)
+        //     }
+        // })
+
+        changesLog.forEach((data) => {
+            console.log(data.id, data.newQuantity)
+        })
+
+        const { data, status } = await request.patch('/groceries/quantity', { groceryId: changesLog[0].id, updatedQuantity: changesLog[0].newQuantity })
+        
+        console.log(status)
+    }
+
     useEffect(() => {
+        console.log(changesLog)
         if (changesLog.length > 0) {
             onOpen()
         } else if (changesLog.length === 0) {
@@ -82,7 +107,7 @@ const Groceries = () => {
                 <Box position='fixed' bottom='15px' left='calc(50% - 250px)' w='500px' zIndex='5' backgroundColor='white' p='15px' rounded='md' shadow='lg'>
                     <Heading size='lg' mb='20px'>Save changes?</Heading>
                     <Box w='100%' display='flex' justifyContent='flex-end' gap='15px'>
-                        <Button colorScheme="green">Save</Button>
+                        <Button colorScheme="green" onClick={handleSaveChanges}>Save</Button>
                         <Button colorScheme="red">Discard changes</Button>
                     </Box>
                 </Box>
