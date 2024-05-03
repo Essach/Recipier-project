@@ -4,7 +4,7 @@ const { ref,
     deleteObject,
 } = require("firebase/storage");
 const { db, storage } = require('../config/firebase.js');
-const { getDocs, collection, getDoc, doc } = require('firebase/firestore');
+const { getDocs, collection, getDoc, doc, updateDoc } = require('firebase/firestore');
 const { v4 } = require('uuid');
 
 const uploadImageAndGetURL = (image) => {
@@ -143,24 +143,31 @@ exports.patchGroceryQuantity = async (request, response, next) => {
     try {
         const { groceryId, updatedQuantity } = request.body;
 
-        if (updatedValue < 0) {
+        console.log('here 1')
+        
+        if (updatedQuantity < 0) {
             response.status(404).json()
 
             return
         }
+        console.log('here 2')
 
         const groceryRef = doc(db, "groceries", groceryId);
+        console.log('here 3')
         const groceryData = await getDoc(groceryRef);
+        console.log('here 4')
         
         if (!groceryData) {
             response.status(405).json({
                 message: "Couldn't find grocery with given id"
             })
         }
+        console.log('here 5')
 
         await updateDoc(groceryRef, {
-            quantity: parseInt(updatedQuantity)
+            quantity: updatedQuantity
         })
+        console.log('here 6')
 
         response.status(200).json()
 
