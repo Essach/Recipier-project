@@ -4,6 +4,7 @@ import { StoreContext } from "../StoreProvider";
 import GroceryItem from "../components/GroceryItem";
 import request from "../helpers/request";
 import { useNavigate } from "react-router-dom";
+import AddGroceryModal from "../components/AddGroceryModal";
 
 export interface GroceryProps {
     id: string,
@@ -27,7 +28,9 @@ const Groceries = () => {
 
     const { groceries } = useContext(StoreContext);
 
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const { isOpen: isOpenAlert, onOpen: onOpenAlert, onClose: onCloseAlert } = useDisclosure()
+
+    const { isOpen: isOpenModal, onOpen: onOpenModal, onClose: onCloseModal } = useDisclosure()
     
     const changesLogReducer = (changesLog: Array<GroceryChange>, action: GroceryAction) => {
         const { type, payload } = action;
@@ -55,12 +58,6 @@ const Groceries = () => {
 
     const [seed, setSeed] = useState(1);
 
-    // let groceryItems = groceries.map((grocery: GroceryProps) => (
-    //     <GroceryItem key={grocery.id}
-    //         {...grocery}
-    //         dispatch={dispatch}
-    //     />))
-
     const handleSaveChanges = async () => {
         changesLog.forEach(async (changeData) => {
             const { data, status } = await request.patch('groceries/quantity', {
@@ -70,6 +67,8 @@ const Groceries = () => {
 
             if (status === 200) {
                 console.log('updated groceries')
+                onCloseAlert();
+                dispatch({ type: 'CLEAR', payload: {} })
                 navigate(0)
             } else {
                 console.log(data.message)
@@ -79,19 +78,14 @@ const Groceries = () => {
 
     const handleDiscardChanges = () => {
         dispatch({ type: 'CLEAR', payload: {} })
-        // groceryItems = groceries.map((grocery: GroceryProps) => (
-        // <GroceryItem key={grocery.id}
-        //     {...grocery}
-        //     dispatch={dispatch}
-        // />))
         setSeed(Math.random())
     }
 
     useEffect(() => {
         if (changesLog.length > 0) {
-            onOpen()
+            onOpenAlert()
         } else if (changesLog.length === 0) {
-            onClose()
+            onCloseAlert()
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[changesLog])
@@ -107,9 +101,13 @@ const Groceries = () => {
                         w='350px'
                         variant='outline'
                     />
-                    <Button variant='solid' colorScheme='teal'>
+                    <Button variant='solid' colorScheme='teal' onClick={onOpenModal}>
                         Add new grocery
                     </Button>
+                    <AddGroceryModal
+                        isOpen={isOpenModal}
+                        onClose={onCloseModal}
+                    />
                 </Flex>
                 <Stack key={seed}>
                     {groceries.map((grocery: GroceryProps) => (
@@ -119,7 +117,7 @@ const Groceries = () => {
                         />))}
                 </Stack>
             </Stack>
-            <Fade in={isOpen}>
+            <Fade in={isOpenAlert}>
                 <Box position='fixed' bottom='15px' left='calc(50% - 250px)' w='500px' zIndex='5' backgroundColor='white' p='15px' rounded='md' shadow='lg'>
                     <Heading size='lg' mb='20px'>Save changes?</Heading>
                     <Box w='100%' display='flex' justifyContent='flex-end' gap='15px'>

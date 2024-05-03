@@ -1,5 +1,5 @@
 import { AspectRatio, Box, Card, CardBody, Editable, EditableInput, EditablePreview, Heading, IconButton, Image } from "@chakra-ui/react";
-import { AddIcon, MinusIcon } from "@chakra-ui/icons";
+import { AddIcon, DeleteIcon, MinusIcon } from "@chakra-ui/icons";
 import { useState } from "react";
 import { GroceryAction } from "../pages/Groceries";
 
@@ -83,6 +83,11 @@ const GroceryItem = ({id, image,name,quantity,quantityType, dispatch}: {id: stri
                     />
                     <Heading size='md' ml='10px'>{quantityType}s</Heading>
                 </Box>
+                <IconButton
+                    colorScheme="red"
+                    aria-label='delete grocery'
+                    icon={<DeleteIcon/>}
+                />
             </CardBody>
         </Card>
     );
