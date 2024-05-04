@@ -1,4 +1,5 @@
-import { Button, FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack } from "@chakra-ui/react";
+import { AddIcon } from "@chakra-ui/icons";
+import { Button, FormControl, FormErrorMessage, FormLabel, HStack, Image, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Radio, RadioGroup, Stack } from "@chakra-ui/react";
 import { useState } from "react";
 
 interface AddGroceryModalProps {
@@ -9,9 +10,38 @@ interface AddGroceryModalProps {
 const AddGroceryModal = ({isOpen, onClose}: AddGroceryModalProps) => {
 
     const [name, setName] = useState('')
+    const [quantityValue, setQuantityValue] = useState(0);
+    const [quantityType, setQuantityType] = useState('pieces')
+
+    const [image, setImage] = useState<File>()
+    const [fileErrorMessage, setFileErrorMessage] = useState('')
+    const [isErrorFile, setIsErrorFile] = useState(false);
 
     const handleChangeName = (e: React.FormEvent<HTMLInputElement>) => {
         setName(e.currentTarget.value)
+    }
+
+    const handleFileInputClick = (e: React.FormEvent<HTMLInputElement>) => {
+        e.currentTarget.value = ''
+    }
+
+    const handleChangeImage = (e: React.FormEvent<HTMLInputElement>) => {
+        if (e.currentTarget.files === null) return
+        const imgSrc = e.currentTarget.files[0];
+        if (imgSrc.size > 500000) {
+            setFileErrorMessage('Files should not exceed 500KB size')
+            setIsErrorFile(true);
+            return
+        } else {
+            setIsErrorFile(false);
+        }
+        setImage(imgSrc);
+
+
+    } 
+
+    const handleChangeQuantityValue = () => {
+
     }
 
     return (
@@ -22,13 +52,50 @@ const AddGroceryModal = ({isOpen, onClose}: AddGroceryModalProps) => {
                 <ModalCloseButton />
                 <ModalBody>
                     <Stack gap='5'>
-                        <FormControl isRequired>
+                        <FormControl>
                             <FormLabel>Name</FormLabel>
                             <Input value={name} onChange={handleChangeName} />
                         </FormControl>
-                        <FormControl isRequired>
+                        <FormControl as='fieldset'>
+                            <FormLabel>Quantity Type</FormLabel>
+                            <RadioGroup defaultValue='Pieces'>
+                                <HStack spacing='24px'>
+                                    <Radio value='pieces'>Pieces</Radio>
+                                    <Radio value='grams'>Grams</Radio>
+                                    <Radio value='milliliters'>Milliliters</Radio>
+                                </HStack>
+                            </RadioGroup>
+                        </FormControl>
+                        <FormControl>
+                            <FormLabel>Quantity</FormLabel>
+                            <NumberInput
+                                max={50000}
+                                min={0}
+                                defaultValue={0}
+                                value={quantityValue}
+                                onChange={handleChangeQuantityValue}
+                            >
+                                <NumberInputField/>
+                            </NumberInput>
+                            {/* <NumberIncrementStepper>
+                                <NumberIncrementStepper />
+                                <NumberDecrementStepper />
+                            </NumberIncrementStepper> */}
+                        </FormControl>
+                        <FormControl>
                             <FormLabel>Image</FormLabel>
-                            <Input type="file" accept="image/png, image/jpeg, image/jpg"/>
+                            <FormLabel htmlFor='file-upload'>
+                                {image === undefined ? <AddIcon boxSize={10}
+                                    bg='gray.100'
+                                    p='7px'
+                                    rounded='sm'
+                                    transition='0.2s ease'
+                                    _hover={{bg: 'gray.200', cursor: 'pointer'}}
+                                /> :
+                                    <Image src={URL.createObjectURL(image)}_hover={{cursor: 'pointer'}}/>}
+                            </FormLabel>
+                            <Input id="file-upload" type='file' display='none' onClick={handleFileInputClick} onChange={handleChangeImage}/>
+                            {isErrorFile && <FormErrorMessage>{fileErrorMessage}</FormErrorMessage>}
                         </FormControl>
                     </Stack>
                 </ModalBody>
