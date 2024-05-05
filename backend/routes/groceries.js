@@ -9,7 +9,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 router.get('/', getGroceries);
-router.post('/', postGrocery);
+router.post('/', upload.any(), postGrocery);
 router.patch('/quantity', patchGroceryQuantity);
 router.patch('/delete', patchDeleteGrocery);
 router.use((request, response) => response.status(404).end());

@@ -81,19 +81,20 @@ exports.postGrocery = async (request, response, next) => {
         const quantity = request.body.quantity;
         const image = request.files[0];
 
+        console.log('here 1')
         const groceriesCollectionRef = collection(db, "groceries");
-
+        console.log('here 2')
         const imageLink = await uploadImageAndGetURL(image)
-
-        const newGroceryRef = await addDoc(groceriesCollectionRef, {
+        console.log('here 3')
+        const newGroceryRef = await addDoc(groceriesCollectionRef, {    
             name,
             quantityType,
             quantity: parseInt(quantity),
             image: imageLink
         })
-
+        console.log('here 4')
         const newGroceryData = await getDoc(newUserRef);
-        
+        console.log('here 5')
         response.status(200).json()
 
         return;

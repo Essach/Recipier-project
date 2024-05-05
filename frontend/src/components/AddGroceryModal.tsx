@@ -1,6 +1,7 @@
 import { AddIcon } from "@chakra-ui/icons";
-import { Button, FormControl, FormErrorMessage, FormLabel, HStack, Image, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Radio, RadioGroup, Stack } from "@chakra-ui/react";
+import { Button, FormControl, FormErrorMessage, FormLabel, HStack, Image, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Radio, RadioGroup, Stack, Text } from "@chakra-ui/react";
 import { useState } from "react";
+import request from "../helpers/request";
 
 interface AddGroceryModalProps {
     isOpen: boolean,
@@ -10,12 +11,14 @@ interface AddGroceryModalProps {
 const AddGroceryModal = ({isOpen, onClose}: AddGroceryModalProps) => {
 
     const [name, setName] = useState('')
-    const [quantityValue, setQuantityValue] = useState(0);
-    const [quantityType, setQuantityType] = useState('pieces')
+    const [quantityValue, setQuantityValue] = useState('0');
+    const [quantityType, setQuantityType] = useState('')
 
     const [image, setImage] = useState<File>()
     const [fileErrorMessage, setFileErrorMessage] = useState('')
     const [isErrorFile, setIsErrorFile] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [isError, setIsError] = useState(false);
 
     const handleChangeName = (e: React.FormEvent<HTMLInputElement>) => {
         setName(e.currentTarget.value)
@@ -36,12 +39,37 @@ const AddGroceryModal = ({isOpen, onClose}: AddGroceryModalProps) => {
             setIsErrorFile(false);
         }
         setImage(imgSrc);
+    }
 
+    const validateForm = () => {
+        if (name === '' || quantityType === '' || image === undefined) {
+            setErrorMessage('Fill in all fields')
+            setIsError(true);
+            return false
+        } 
+        setIsError(false)
+        setErrorMessage('')
+        return true
+    }
 
-    } 
-
-    const handleChangeQuantityValue = () => {
-
+    const handleAddGrocery = async () => {
+        const valid = validateForm();
+        console.log(image)
+        if (valid && image !== undefined) {
+            const formData = new FormData();
+            formData.append('image', image)
+            formData.append('name', name);
+            formData.append('quantityType', quantityType);
+            formData.append('quantity', quantityValue);
+            
+            const { data, status } = await request.post('/groceries', formData)
+            
+            if (status === 200) {
+                console.log('essa')
+            } else {
+                console.log(data.message)
+            }
+        }
     }
 
     return (
@@ -58,7 +86,7 @@ const AddGroceryModal = ({isOpen, onClose}: AddGroceryModalProps) => {
                         </FormControl>
                         <FormControl as='fieldset'>
                             <FormLabel>Quantity Type</FormLabel>
-                            <RadioGroup defaultValue='Pieces'>
+                            <RadioGroup value={quantityType} onChange={setQuantityType}>
                                 <HStack spacing='24px'>
                                     <Radio value='pieces'>Pieces</Radio>
                                     <Radio value='grams'>Grams</Radio>
@@ -69,18 +97,18 @@ const AddGroceryModal = ({isOpen, onClose}: AddGroceryModalProps) => {
                         <FormControl>
                             <FormLabel>Quantity</FormLabel>
                             <NumberInput
+                                onChange={(valueString) => setQuantityValue(valueString)}
+                                value={quantityValue}
                                 max={50000}
                                 min={0}
                                 defaultValue={0}
-                                value={quantityValue}
-                                onChange={handleChangeQuantityValue}
                             >
-                                <NumberInputField/>
+                                <NumberInputField />
+                                <NumberInputStepper>
+                                    <NumberIncrementStepper/>
+                                    <NumberDecrementStepper />
+                                </NumberInputStepper>
                             </NumberInput>
-                            {/* <NumberIncrementStepper>
-                                <NumberIncrementStepper />
-                                <NumberDecrementStepper />
-                            </NumberIncrementStepper> */}
                         </FormControl>
                         <FormControl>
                             <FormLabel>Image</FormLabel>
@@ -97,10 +125,19 @@ const AddGroceryModal = ({isOpen, onClose}: AddGroceryModalProps) => {
                             <Input id="file-upload" type='file' display='none' onClick={handleFileInputClick} onChange={handleChangeImage}/>
                             {isErrorFile && <FormErrorMessage>{fileErrorMessage}</FormErrorMessage>}
                         </FormControl>
+                        {isError &&
+                            <Text color='red'>
+                                *{errorMessage}
+                            </Text>}
                     </Stack>
                 </ModalBody>
                 <ModalFooter>
-                    <Button></Button>
+                    <Button colorScheme='gray' mr={3} onClick={onClose}>
+                        Close
+                    </Button>
+                    <Button colorScheme='teal' onClick={handleAddGrocery}>
+                        Add
+                    </Button>
                 </ModalFooter>
             </ModalContent>
         </Modal>

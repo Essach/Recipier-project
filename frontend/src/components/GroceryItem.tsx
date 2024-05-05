@@ -1,4 +1,4 @@
-import { AspectRatio, Box, Card, CardBody, Editable, EditableInput, EditablePreview, Heading, IconButton, Image } from "@chakra-ui/react";
+import { AspectRatio, Box, Card, CardBody, Editable, EditableInput, EditablePreview, Flex, Heading, IconButton, Image } from "@chakra-ui/react";
 import { AddIcon, DeleteIcon, MinusIcon } from "@chakra-ui/icons";
 import { useState } from "react";
 import { GroceryAction } from "../pages/Groceries";
@@ -44,6 +44,7 @@ const GroceryItem = ({id, image,name,quantity,quantityType, dispatch}: {id: stri
     return (
         <Card maxW='700px'>
             <CardBody display='flex' alignItems='center' justifyContent='space-between' p='12px'>
+                <Flex align='center' gap='4'>
                 <Box display='flex' alignItems='center'>
                     <Image
                         src={image}
@@ -53,6 +54,13 @@ const GroceryItem = ({id, image,name,quantity,quantityType, dispatch}: {id: stri
                     />
                     <Heading size='lg'>{name.charAt(0).toUpperCase() + name.slice(1)}</Heading>
                 </Box>
+                <IconButton
+                    colorScheme="red"
+                    aria-label='delete grocery'
+                    icon={<DeleteIcon/>}
+                    mt='3px'
+                />
+                </Flex>
                 <Box display='flex' alignItems='center'>
                     <IconButton
                         aria-label='Add 1 of this grocery'
@@ -83,11 +91,6 @@ const GroceryItem = ({id, image,name,quantity,quantityType, dispatch}: {id: stri
                     />
                     <Heading size='md' ml='10px'>{quantityType}s</Heading>
                 </Box>
-                <IconButton
-                    colorScheme="red"
-                    aria-label='delete grocery'
-                    icon={<DeleteIcon/>}
-                />
             </CardBody>
         </Card>
     );
