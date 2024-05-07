@@ -4,7 +4,7 @@ const { ref,
     deleteObject,
 } = require("firebase/storage");
 const { db, storage } = require('../config/firebase.js');
-const { getDocs, collection, getDoc, doc, updateDoc } = require('firebase/firestore');
+const { getDocs, collection, getDoc, doc, updateDoc, addDoc, deleteDoc } = require('firebase/firestore');
 const { v4 } = require('uuid');
 
 const uploadImageAndGetURL = (image) => {
@@ -81,20 +81,15 @@ exports.postGrocery = async (request, response, next) => {
         const quantity = request.body.quantity;
         const image = request.files[0];
 
-        console.log('here 1')
         const groceriesCollectionRef = collection(db, "groceries");
-        console.log('here 2')
         const imageLink = await uploadImageAndGetURL(image)
-        console.log('here 3')
         const newGroceryRef = await addDoc(groceriesCollectionRef, {    
             name,
             quantityType,
             quantity: parseInt(quantity),
             image: imageLink
         })
-        console.log('here 4')
-        const newGroceryData = await getDoc(newUserRef);
-        console.log('here 5')
+        const newGroceryData = await getDoc(newGroceryRef);
         response.status(200).json()
 
         return;
