@@ -6,9 +6,14 @@ import request from "../helpers/request";
 import { useNavigate } from "react-router-dom";
 import AddGroceryModal from "../components/AddGroceryModal";
 
+
+export interface GroceryPropsImage {
+    url: string,
+    filePath: string,
+}
 export interface GroceryProps {
     id: string,
-    image: string,
+    image: GroceryPropsImage,
     name: string,
     quantity: string,
     quantityType: string

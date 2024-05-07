@@ -2,6 +2,7 @@ import { AddIcon } from "@chakra-ui/icons";
 import { Button, FormControl, FormErrorMessage, FormLabel, HStack, Image, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Radio, RadioGroup, Stack, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import request from "../helpers/request";
+import { useNavigate } from "react-router-dom";
 
 interface AddGroceryModalProps {
     isOpen: boolean,
@@ -9,6 +10,8 @@ interface AddGroceryModalProps {
 }
 
 const AddGroceryModal = ({isOpen, onClose}: AddGroceryModalProps) => {
+
+    const navigate = useNavigate();
 
     const [name, setName] = useState('')
     const [quantityValue, setQuantityValue] = useState('0');
@@ -65,9 +68,10 @@ const AddGroceryModal = ({isOpen, onClose}: AddGroceryModalProps) => {
             const { data, status } = await request.post('/groceries', formData)
             
             if (status === 200) {
-                console.log('essa')
+                console.log('added new grocery');
+                navigate(0);
             } else {
-                console.log(data.message)
+                throw new Error(data.message);
             }
         }
     }
