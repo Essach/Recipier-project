@@ -1,11 +1,15 @@
-import { AspectRatio, Box, Card, CardBody, Editable, EditableInput, EditablePreview, Flex, Heading, IconButton, Image } from "@chakra-ui/react";
+import { AspectRatio, Box, Card, CardBody, Editable, EditableInput, EditablePreview, Flex, Heading, IconButton, Image, useDisclosure } from "@chakra-ui/react";
 import { AddIcon, DeleteIcon, MinusIcon } from "@chakra-ui/icons";
-import { useState } from "react";
-import { GroceryAction } from "../pages/Groceries";
+import { useRef, useState } from "react";
+import { GroceryAction, GroceryPropsImage } from "../pages/Groceries";
+import GroceryDeleteDialog from "./GroceryDeleteDialog";
 
-const GroceryItem = ({id, image,name,quantity,quantityType, dispatch}: {id: string,image: string,name: string,quantity: string, quantityType: string, dispatch: (arg0: GroceryAction) => void}) => {
+const GroceryItem = ({id, image,name,quantity,quantityType, dispatch}: {id: string,image: GroceryPropsImage,name: string,quantity: string, quantityType: string, dispatch: (arg0: GroceryAction) => void}) => {
     const [currentQuantity, setCurrentQuantity] = useState<string>(quantity);
     
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    const cancelRef = useRef(null)
+
     const handleChangeQuantity = (v: string) => {
         if (parseInt(v) >= 0 || v === "") {
             setCurrentQuantity(v)
@@ -45,21 +49,31 @@ const GroceryItem = ({id, image,name,quantity,quantityType, dispatch}: {id: stri
         <Card maxW='700px'>
             <CardBody display='flex' alignItems='center' justifyContent='space-between' p='12px'>
                 <Flex align='center' gap='4'>
-                <Box display='flex' alignItems='center'>
+                <Box display='flex' alignItems='center' gap='2'>
                     <Image
-                        src={image}
+                        src={image.url}
                         objectFit='cover'
                         boxSize='60px'
                         aspectRatio={1}
                     />
                     <Heading size='lg'>{name.charAt(0).toUpperCase() + name.slice(1)}</Heading>
                 </Box>
-                <IconButton
-                    colorScheme="red"
-                    aria-label='delete grocery'
-                    icon={<DeleteIcon/>}
-                    mt='3px'
-                />
+                <Box>
+                    <IconButton
+                        colorScheme="red"
+                        aria-label='delete grocery'
+                        icon={<DeleteIcon/>}
+                        mt='3px'
+                        onClick={onOpen}
+                    />
+                    <GroceryDeleteDialog 
+                        isOpen={isOpen}
+                        onClose={onClose}
+                        cancelRef={cancelRef}
+                        id={id}
+                        filePath={image.filePath}
+                    />
+                </Box>
                 </Flex>
                 <Box display='flex' alignItems='center'>
                     <IconButton
@@ -89,7 +103,7 @@ const GroceryItem = ({id, image,name,quantity,quantityType, dispatch}: {id: stri
                         colorScheme='red'
                         onClick={handleSubtractQuantity}
                     />
-                    <Heading size='md' ml='10px'>{quantityType}s</Heading>
+                    <Heading size='md' ml='10px'>{quantityType}</Heading>
                 </Box>
             </CardBody>
         </Card>
