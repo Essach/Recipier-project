@@ -63,6 +63,9 @@ const Groceries = () => {
 
     const [seed, setSeed] = useState(1);
 
+    const [searchValue, setSearchValue] = useState('');
+    const [groceryItems, setGroceryItems] = useState<React.ReactElement[]>();
+
     const handleSaveChanges = async () => {
         changesLog.forEach(async (changeData) => {
             const { data, status } = await request.patch('groceries/quantity', {
@@ -86,6 +89,10 @@ const Groceries = () => {
         setSeed(Math.random())
     }
 
+    const handleChangeSearch = (e: React.FormEvent<HTMLInputElement>) => {
+        setSearchValue(e.currentTarget.value)
+    }
+
     useEffect(() => {
         if (changesLog.length > 0) {
             onOpenAlert()
@@ -93,7 +100,19 @@ const Groceries = () => {
             onCloseAlert()
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[changesLog])
+    }, [changesLog])
+    
+    useEffect(() => {
+        const groceriesToShow = groceries.filter((keyword) => {
+            return keyword.name.toLowerCase().includes(searchValue.toLowerCase());
+        })
+
+        setGroceryItems(groceriesToShow.map((grocery: GroceryProps) => (
+            <GroceryItem key={grocery.id}
+                {...grocery}
+                dispatch={dispatch}
+            />)))
+    },[searchValue, groceries])
 
     return (
         <>
@@ -105,6 +124,8 @@ const Groceries = () => {
                         size='md'
                         w='350px'
                         variant='outline'
+                        value={searchValue}
+                        onChange={handleChangeSearch}
                     />
                     <Button variant='solid' colorScheme='teal' onClick={onOpenModal}>
                         Add new grocery
@@ -115,11 +136,7 @@ const Groceries = () => {
                     />
                 </Flex>
                 <Stack key={seed}>
-                    {groceries.map((grocery: GroceryProps) => (
-                        <GroceryItem key={grocery.id}
-                            {...grocery}
-                            dispatch={dispatch}
-                        />))}
+                    {groceryItems}
                 </Stack>
             </Stack>
             <Fade in={isOpenAlert}>
