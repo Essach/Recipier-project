@@ -1,18 +1,25 @@
-import { Box, Card, CardBody, Flex, Heading, IconButton, Image, useDisclosure } from "@chakra-ui/react";
+import { Box, Card, CardBody, Flex, Heading, IconButton, Image, List, useDisclosure } from "@chakra-ui/react";
 import { ChevronDownIcon, DeleteIcon} from "@chakra-ui/icons";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import GroceryDeleteDialog from "./GroceryDeleteDialog";
-import { RecipeAction, RecipePropsImage } from "../pages/Recipes";
+import { RecipeAction, RecipeIngredientProps, RecipePropsImage } from "../pages/Recipes";
+import IngredientsListItem from "./IngredientsListItem";
 
-const RecipeItem = ({id, image,name, ingredients, dispatch}: {id: string,image: RecipePropsImage,name: string,quantity: string, quantityType: string, dispatch: (arg0: RecipeAction) => void}) => {
+
+const RecipeItem = ({id, image,name, ingredients, dispatch}: {id: string,image: RecipePropsImage,name: string, ingredients: Array<RecipeIngredientProps>, dispatch: (arg0: RecipeAction) => void}) => {
     
     const { isOpen, onOpen, onClose } = useDisclosure()
     const cancelRef = useRef(null)
 
+    const [isClosed, setIsClosed] = useState(true)
+    const handleOnClickOpen = () => {
+        setIsClosed(prev => !prev)
+    }
+
     return (
         <Card maxW='700px'>
-            <CardBody display='flex' flexDirection='column' justifyContent='space-between' p='0'>
-                <Flex justifyContent='space-between' flexGrow='1' alignItems='center' p='12px'>
+            <CardBody display='flex' flexDirection='column' justifyContent='space-between' p='0' position='relative'>
+                <Flex justifyContent='space-between' flexGrow='1' alignItems='center' p='12px' zIndex='5' h='85px' bg='white'>
                     <Box display='flex' alignItems='center' gap='2'>
                         <Image
                             src={image.url}
@@ -39,9 +46,23 @@ const RecipeItem = ({id, image,name, ingredients, dispatch}: {id: string,image: 
                         />
                     </Box>
                 </Flex>
-                <Box w='100%' h='30px' display='flex' justifyContent='center' borderTop='1px solid black' alignItems={'center'}>
-                    <ChevronDownIcon boxSize={10} />
+                <Box w='100%' h='120px' display='flex' flexDirection='column' justifyContent='space-between' position='absolute' bg='white' transform={isClosed ? 'translateY(0px)' : 'translateY(85px)'} transition={isClosed ? '0.05s all ease-in' : '0.15s all ease-out'}>
+                    <Box h='85px'>
+                        {!isClosed && (
+                            <List display='grid' h='85px' gridAutoFlow='column' gridTemplateRows='repeat(3,1fr)'
+                            gridTemplateColumns='repeat(3, 1fr)'
+                            p='2px 12px'>
+                                    {ingredients.map((ingredient: RecipeIngredientProps) => <IngredientsListItem key={Math.random()} {...ingredient} />)}
+                            </List>
+                        )}
+                    </Box>
+                    <Flex w='100% ' h='35px' borderTop='1px solid black' justifyContent='center' alignItems='center'
+                        _hover={{ cursor: 'pointer' }}
+                        onClick={handleOnClickOpen} >
+                        <ChevronDownIcon boxSize={9} transform={isClosed ? 'none' : 'rotate(180deg)'}  transition={isClosed ? '0.05s all ease-in' : '0.15s all ease-out'}/> 
+                    </Flex>
                 </Box>
+
             </CardBody>
         </Card>
     );

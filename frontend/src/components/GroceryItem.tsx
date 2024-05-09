@@ -4,8 +4,8 @@ import { useRef, useState } from "react";
 import { GroceryAction, GroceryPropsImage } from "../pages/Groceries";
 import GroceryDeleteDialog from "./GroceryDeleteDialog";
 
-const GroceryItem = ({id, image,name,quantity,quantityType, dispatch}: {id: string,image: GroceryPropsImage,name: string,quantity: string, quantityType: string, dispatch: (arg0: GroceryAction) => void}) => {
-    const [currentQuantity, setCurrentQuantity] = useState<string>(quantity);
+const GroceryItem = ({id, image,name,quantity,quantityType, dispatch}: {id: string,image: GroceryPropsImage,name: string,quantity: number, quantityType: string, dispatch: (arg0: GroceryAction) => void}) => {
+    const [currentQuantity, setCurrentQuantity] = useState<string>(quantity.toString());
     
     const { isOpen, onOpen, onClose } = useDisclosure()
     const cancelRef = useRef(null)
@@ -14,23 +14,23 @@ const GroceryItem = ({id, image,name,quantity,quantityType, dispatch}: {id: stri
         if (parseInt(v) >= 0 || v === "") {
             setCurrentQuantity(v)
         }
-        if (parseInt(v) !== parseInt(quantity)) {
+        if (parseInt(v) !== quantity) {
             dispatch({ type: 'ADD', payload: { id: id, newQuantity: parseInt(v) } })
-        } else if (parseInt(v) === parseInt(quantity)) {
+        } else if (parseInt(v) === quantity) {
             dispatch({ type: 'DELETE', payload: { id: id } })
         }
     }
     const handleOnBlurQuantity = () => {
         if (currentQuantity === "") {
-            setCurrentQuantity(quantity)
+            setCurrentQuantity(quantity.toString())
         }
     }
     const handleAddQuantity = () => {
         setCurrentQuantity((parseInt(currentQuantity) + 1).toString())
 
-        if (parseInt(currentQuantity)+1 !== parseInt(quantity)) {
+        if (parseInt(currentQuantity)+1 !== quantity) {
             dispatch({ type: 'ADD', payload: { id: id, newQuantity: parseInt(currentQuantity)+1 } })
-        } else if (parseInt(currentQuantity)+1 === parseInt(quantity)) {
+        } else if (parseInt(currentQuantity)+1 === quantity) {
             dispatch({ type: 'DELETE', payload: { id: id } })
         }
     }
@@ -38,9 +38,9 @@ const GroceryItem = ({id, image,name,quantity,quantityType, dispatch}: {id: stri
         if (parseInt(currentQuantity) > 0) {
             setCurrentQuantity((parseInt(currentQuantity) - 1).toString())
         }
-        if (parseInt(currentQuantity) - 1 !== parseInt(quantity)) {
+        if (parseInt(currentQuantity) - 1 !== quantity) {
             dispatch({ type: 'ADD', payload: { id: id, newQuantity: parseInt(currentQuantity) - 1 } })
-        } else if (parseInt(currentQuantity)-1 === parseInt(quantity)) {
+        } else if (parseInt(currentQuantity)-1 === quantity) {
             dispatch({ type: 'DELETE', payload: { id: id } })
         }
     }

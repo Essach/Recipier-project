@@ -1,7 +1,6 @@
 import { Box, Button, Fade, Flex, Heading, Input, Stack, useDisclosure } from "@chakra-ui/react";
 import { useContext, useEffect, useReducer, useState } from "react";
 import { StoreContext } from "../StoreProvider";
-import request from "../helpers/request";
 import { useNavigate } from "react-router-dom";
 import AddGroceryModal from "../components/AddGroceryModal";
 import RecipeItem from "../components/RecipeItem";
@@ -11,10 +10,10 @@ export interface RecipePropsImage {
     url: string,
     filePath: string,
 }
-interface RecipeIngredientProps {
+export interface RecipeIngredientProps {
     name: string,
     quantity: number,
-    quantityType: string
+    quantityType: 'piece' | 'gram' | 'milliliter' 
 }
 export interface RecipeProps {
     id: string,

@@ -15,7 +15,7 @@ export interface GroceryProps {
     id: string,
     image: GroceryPropsImage,
     name: string,
-    quantity: string,
+    quantity: number,
     quantityType: string
 }
 
