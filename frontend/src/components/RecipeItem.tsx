@@ -1,9 +1,9 @@
 import { Box, Card, CardBody, Flex, Heading, IconButton, Image, List, useDisclosure } from "@chakra-ui/react";
 import { ChevronDownIcon, DeleteIcon} from "@chakra-ui/icons";
 import { useRef, useState } from "react";
-import GroceryDeleteDialog from "./GroceryDeleteDialog";
 import { RecipeAction, RecipeIngredientProps, RecipePropsImage } from "../pages/Recipes";
 import IngredientsListItem from "./IngredientsListItem";
+import RecipeDeleteDialog from "./RecipeDeleteDialog";
 
 
 const RecipeItem = ({id, image,name, ingredients, dispatch}: {id: string,image: RecipePropsImage,name: string, ingredients: Array<RecipeIngredientProps>, dispatch: (arg0: RecipeAction) => void}) => {
@@ -29,7 +29,7 @@ const RecipeItem = ({id, image,name, ingredients, dispatch}: {id: string,image: 
                         />
                         <Heading size='lg'>{name.charAt(0).toUpperCase() + name.slice(1)}</Heading>
                     </Box>
-                    <Box h='100%'>
+                    <Box h='100%' display='flex' alignItems='center'>
                         <IconButton
                             colorScheme="red"
                             aria-label='delete grocery'
@@ -37,7 +37,7 @@ const RecipeItem = ({id, image,name, ingredients, dispatch}: {id: string,image: 
                             onClick={onOpen}
                             size='lg'
                         />
-                        <GroceryDeleteDialog 
+                        <RecipeDeleteDialog
                             isOpen={isOpen}
                             onClose={onClose}
                             cancelRef={cancelRef}
@@ -62,7 +62,6 @@ const RecipeItem = ({id, image,name, ingredients, dispatch}: {id: string,image: 
                         <ChevronDownIcon boxSize={9} transform={isClosed ? 'none' : 'rotate(180deg)'}  transition={isClosed ? '0.05s all ease-in' : '0.15s all ease-out'}/> 
                     </Flex>
                 </Box>
-
             </CardBody>
         </Card>
     );

@@ -2,8 +2,8 @@ import { Box, Button, Fade, Flex, Heading, Input, Stack, useDisclosure } from "@
 import { useContext, useEffect, useReducer, useState } from "react";
 import { StoreContext } from "../StoreProvider";
 import { useNavigate } from "react-router-dom";
-import AddGroceryModal from "../components/AddGroceryModal";
 import RecipeItem from "../components/RecipeItem";
+import AddRecipeModal from "../components/AddRecipeModal";
 
 
 export interface RecipePropsImage {
@@ -108,7 +108,7 @@ const Recipes = () => {
                     <Button variant='solid' colorScheme='teal' onClick={onOpenModal}>
                         Add new recipe
                     </Button>
-                    <AddGroceryModal
+                    <AddRecipeModal
                         isOpen={isOpenModal}
                         onClose={onCloseModal}
                     />
