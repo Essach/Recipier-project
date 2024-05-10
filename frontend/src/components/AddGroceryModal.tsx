@@ -92,9 +92,9 @@ const AddGroceryModal = ({isOpen, onClose}: AddGroceryModalProps) => {
                             <FormLabel>Quantity Type</FormLabel>
                             <RadioGroup value={quantityType} onChange={setQuantityType}>
                                 <HStack spacing='24px'>
-                                    <Radio value='pieces'>Pieces</Radio>
-                                    <Radio value='grams'>Grams</Radio>
-                                    <Radio value='milliliters'>Milliliters</Radio>
+                                    <Radio value='piece'>Pieces</Radio>
+                                    <Radio value='gram'>Grams</Radio>
+                                    <Radio value='milliliter'>Milliliters</Radio>
                                 </HStack>
                             </RadioGroup>
                         </FormControl>
