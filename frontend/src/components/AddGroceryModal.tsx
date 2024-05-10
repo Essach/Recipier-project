@@ -126,7 +126,7 @@ const AddGroceryModal = ({isOpen, onClose}: AddGroceryModalProps) => {
                                 /> :
                                     <Image src={URL.createObjectURL(image)}_hover={{cursor: 'pointer'}}/>}
                             </FormLabel>
-                            <Input id="file-upload" type='file' display='none' onClick={handleFileInputClick} onChange={handleChangeImage}/>
+                            <Input id="file-upload" type='file' display='none' onClick={handleFileInputClick} onChange={handleChangeImage} accept="image/jpeg, image/png, image/jpg"/>
                             {isErrorFile && <FormErrorMessage>{fileErrorMessage}</FormErrorMessage>}
                         </FormControl>
                         {isError &&
