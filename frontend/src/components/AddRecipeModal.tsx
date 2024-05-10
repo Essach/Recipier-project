@@ -1,10 +1,10 @@
-import { AddIcon } from "@chakra-ui/icons";
-import { Box, Button, FormControl, FormErrorMessage, FormLabel, HStack, Heading, Image, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Radio, RadioGroup, Stack, Text } from "@chakra-ui/react";
+import { Box, Button, FormControl, FormLabel, Heading, Image, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import request from "../helpers/request";
 import { useNavigate } from "react-router-dom";
 import { RecipeIngredientProps } from "../pages/Recipes";
 import AddRecipeIngredient from "./AddRecipeIngredient";
+import { AddIcon } from "@chakra-ui/icons";
 
 interface AddRecipeModalProps {
     isOpen: boolean,
@@ -16,6 +16,11 @@ const AddRecipeModal = ({isOpen, onClose}: AddRecipeModalProps) => {
 
     const navigate = useNavigate();
 
+    const [name, setName] = useState('')
+    const [image, setImage] = useState<File>()
+    const [fileErrorMessage, setFileErrorMessage] = useState('')
+    const [isErrorFile, setIsErrorFile] = useState(false);
+    
     const [ingredient1, setIngredient1] = useState<RecipeIngredientProps>({name: '', quantity: 0, quantityType: 'piece'})
     const [ingredient2, setIngredient2] = useState<RecipeIngredientProps>({name: '', quantity: 0, quantityType: 'piece'})
     const [ingredient3, setIngredient3] = useState<RecipeIngredientProps>({name: '', quantity: 0, quantityType: 'piece'})
@@ -28,8 +33,27 @@ const AddRecipeModal = ({isOpen, onClose}: AddRecipeModalProps) => {
 
     const [ingredientsNum, setIngredientsNum] = useState(1);
 
-    // const [errorMessage, setErrorMessage] = useState('');
-    // const [isError, setIsError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [isError, setIsError] = useState(false);
+
+    const handleChangeName = (e: React.FormEvent<HTMLInputElement>) => {
+        setName(e.currentTarget.value)
+    }
+    const handleFileInputClick = (e: React.FormEvent<HTMLInputElement>) => {
+        e.currentTarget.value = ''
+    }
+    const handleChangeImage = (e: React.FormEvent<HTMLInputElement>) => {
+        if (e.currentTarget.files === null) return
+        const imgSrc = e.currentTarget.files[0];
+        if (imgSrc.size > 500000) {
+            setFileErrorMessage('Files should not exceed 500KB size')
+            setIsErrorFile(true);
+            return
+        } else {
+            setIsErrorFile(false);
+        }
+        setImage(imgSrc);
+    }
 
     const handleAddIngredient = () => {
         setIngredientsNum(prev => prev+1)
@@ -64,35 +88,48 @@ const AddRecipeModal = ({isOpen, onClose}: AddRecipeModalProps) => {
     }
 
     const validateForm = () => {
-        // if (name === '' || quantityType === '' || image === undefined) {
-        //     setErrorMessage('Fill in all fields')
-        //     setIsError(true);
-        //     return false
-        // } 
-        // setIsError(false)
-        // setErrorMessage('')
-        // return true
+        const ingredients = [ingredient1, ingredient2, ingredient3, ingredient4, ingredient5, ingredient6, ingredient7, ingredient8, ingredient9];
+
+        if (name === '' || image === undefined) {
+            setErrorMessage('Fill in all fields')
+            setIsError(true);
+            return false
+        } 
+
+        let isErrorForLoop = false;
+        ingredients.forEach((ingredient, i) => {
+            if ((ingredientsNum >= i+1) && (ingredient.name === '' || ingredient.quantity === 0)) {
+                setErrorMessage('Fill in all fields')
+                setIsError(true);
+                isErrorForLoop = true;
+                return false
+            }
+        })
+        if (isErrorForLoop) return false
+
+        setIsError(false)
+        setErrorMessage('')
+        return true
     }
 
     const handleAddRecipe = async () => {
         const valid = validateForm();
-        console.log(image)
-        if (valid && image !== undefined) {
-            const formData = new FormData();
-            formData.append('image', image)
-            formData.append('name', name);
-            formData.append('quantityType', quantityType);
-            formData.append('quantity', quantityValue);
+        // if (valid) {
+        //     const formData = new FormData();
+        //     formData.append('image', image);
+        //     formData.append('name', name);
+        //     formData.append('quantityType', quantityType);
+        //     formData.append('quantity', quantityValue);
             
-            const { data, status } = await request.post('/groceries', formData)
+        //     const { data, status } = await request.post('/groceries', formData)
             
-            if (status === 200) {
-                console.log('added new grocery');
-                navigate(0);
-            } else {
-                throw new Error(data.message);
-            }
-        }
+        //     if (status === 200) {
+        //         console.log('added new grocery');
+        //         navigate(0);
+        //     } else {
+        //         throw new Error(data.message);
+        //     }
+        // }
     }
 
     return (
@@ -102,6 +139,28 @@ const AddRecipeModal = ({isOpen, onClose}: AddRecipeModalProps) => {
                 <ModalHeader><Heading size='lg'>Add new recipe</Heading></ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
+                    <Box mb='15px'>
+                        <FormControl>
+                            <FormLabel>Recipe name</FormLabel>
+                            <Input value={name} onChange={handleChangeName} />
+                        </FormControl>
+                        <FormControl>
+                            <FormLabel>Image</FormLabel>
+                            <FormLabel htmlFor='file-upload'>
+                                {image === undefined ? <AddIcon boxSize={10}
+                                    bg='gray.100'
+                                    p='7px'
+                                    rounded='sm'
+                                    transition='0.2s ease'
+                                    _hover={{bg: 'gray.200', cursor: 'pointer'}}
+                                /> :
+                                    <Image src={URL.createObjectURL(image)}_hover={{cursor: 'pointer'}}/>}
+                            </FormLabel>
+                            <Input id="file-upload" type='file' display='none' onClick={handleFileInputClick} onChange={handleChangeImage}
+                            accept="image/jpeg, image/png, image/jpg"
+                            />
+                        </FormControl>
+                    </Box>
                     <Stack gap='5'>
                         <AddRecipeIngredient
                             ingredient={ingredient1}
@@ -157,7 +216,10 @@ const AddRecipeModal = ({isOpen, onClose}: AddRecipeModalProps) => {
                             num={9}
                             isDisplayed={ingredientsNum>=9}
                         />
-                        
+                        {isError &&
+                        <Text color='red'>
+                            *{errorMessage}
+                        </Text>}
                         <Box w='100%' display='flex' justifyContent='center' gap='5px'>
                             {ingredientsNum > 1 && 
                             <Button fontSize='sm' colorScheme="red"

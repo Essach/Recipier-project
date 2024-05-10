@@ -1,13 +1,9 @@
-import { Box, Button, FormControl, FormLabel, HStack, Heading, Input, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Radio, RadioGroup, Stack, Text } from "@chakra-ui/react";
+import { Box, FormControl, FormLabel, HStack, Heading, Input, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Radio, RadioGroup, Stack} from "@chakra-ui/react";
 import { RecipeIngredientProps } from "../pages/Recipes";
-import { useState } from "react";
 
 const AddRecipeIngredient = ({ ingredient, setIngredient, num, isDisplayed }: {
     ingredient: RecipeIngredientProps, setIngredient: (arg0: RecipeIngredientProps) => void, num: number, isDisplayed: boolean
 }) => {
-
-    const [errorMessage, setErrorMessage] = useState('');
-    const [isError, setIsError] = useState(false);
 
     return (
         <Box display={isDisplayed ? 'block' : 'none'}>
@@ -49,16 +45,12 @@ const AddRecipeIngredient = ({ ingredient, setIngredient, num, isDisplayed }: {
                         setIngredient(newIngredient)
                     }}>
                         <HStack spacing='24px'>
-                            <Radio value='pieces'>Pieces</Radio>
-                            <Radio value='grams'>Grams</Radio>
-                            <Radio value='milliliters'>Milliliters</Radio>
+                            <Radio value='piece'>Pieces</Radio>
+                            <Radio value='gram'>Grams</Radio>
+                            <Radio value='milliliter'>Milliliters</Radio>
                         </HStack>
                     </RadioGroup>
                 </FormControl>
-                {isError &&
-                    <Text color='red'>
-                        *{errorMessage}
-                    </Text>}
             </Stack>
         </Box>
     );
