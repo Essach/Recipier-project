@@ -5,6 +5,7 @@ const { ref,
 } = require("firebase/storage");
 const { db, storage } = require('../config/firebase.js');
 const { getDocs, collection, getDoc, doc, updateDoc, addDoc, deleteDoc } = require('firebase/firestore');
+const { v4 } = require('uuid');
 
 const uploadImageAndGetURL = (image) => {
     const promise = new Promise((resolve, reject) => {
@@ -77,7 +78,7 @@ exports.postRecipe = async (request, response, next) => {
     try {  
         const name = request.body.name;
         const image = request.files[0];
-        const ingredients = request.body.ingredients;
+        const ingredients = JSON.parse(request.body.ingredients);
 
         const recipesCollectionRef = collection(db, "recipes");
         const imageLink = await uploadImageAndGetURL(image)

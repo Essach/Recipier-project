@@ -1,7 +1,6 @@
 import { Box, Button, Fade, Flex, Heading, Input, Stack, useDisclosure } from "@chakra-ui/react";
 import { useContext, useEffect, useReducer, useState } from "react";
 import { StoreContext } from "../StoreProvider";
-import { useNavigate } from "react-router-dom";
 import RecipeItem from "../components/RecipeItem";
 import AddRecipeModal from "../components/AddRecipeModal";
 
@@ -53,8 +52,6 @@ const Recipes = () => {
         }
     }
     const [changesLog, dispatch] = useReducer(changesLogReducer, [])
-
-    const navigate = useNavigate();
 
     const [seed, setSeed] = useState(1);
 

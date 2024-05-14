@@ -1,4 +1,4 @@
-import { Box, Button, FormControl, FormLabel, Heading, Image, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text } from "@chakra-ui/react";
+import { Box, Button, FormControl, FormErrorMessage, FormLabel, Heading, Image, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import request from "../helpers/request";
 import { useNavigate } from "react-router-dom";
@@ -114,22 +114,27 @@ const AddRecipeModal = ({isOpen, onClose}: AddRecipeModalProps) => {
 
     const handleAddRecipe = async () => {
         const valid = validateForm();
-        // if (valid) {
-        //     const formData = new FormData();
-        //     formData.append('image', image);
-        //     formData.append('name', name);
-        //     formData.append('quantityType', quantityType);
-        //     formData.append('quantity', quantityValue);
-            
-        //     const { data, status } = await request.post('/groceries', formData)
-            
-        //     if (status === 200) {
-        //         console.log('added new grocery');
-        //         navigate(0);
-        //     } else {
-        //         throw new Error(data.message);
-        //     }
-        // }
+        if (valid && image !== undefined) {
+            const allIngredients = [ingredient1, ingredient2, ingredient3, ingredient4, ingredient5, ingredient6, ingredient7, ingredient8, ingredient9];
+
+            const formData = new FormData();
+            formData.append('image', image);
+            formData.append('name', name);
+            const ingredients: Array<RecipeIngredientProps> = []
+            allIngredients.forEach((ingredient, i) => {
+                if (i < ingredientsNum) ingredients.push(ingredient)
+            })
+            formData.append('ingredients', JSON.stringify(ingredients));
+
+            const { data, status } = await request.post('/recipes', formData);
+
+            if (status === 200) {
+                navigate(0)
+            } else {
+                throw new Error(data.message)
+            }
+
+        }
     }
 
     return (
@@ -159,6 +164,7 @@ const AddRecipeModal = ({isOpen, onClose}: AddRecipeModalProps) => {
                             <Input id="file-upload" type='file' display='none' onClick={handleFileInputClick} onChange={handleChangeImage}
                             accept="image/jpeg, image/png, image/jpg"
                             />
+                            {isErrorFile && <FormErrorMessage>{fileErrorMessage}</FormErrorMessage>}
                         </FormControl>
                     </Box>
                     <Stack gap='5'>

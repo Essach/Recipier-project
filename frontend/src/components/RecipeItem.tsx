@@ -19,7 +19,7 @@ const RecipeItem = ({id, image,name, ingredients, dispatch}: {id: string,image: 
     return (
         <Card maxW='700px'>
             <CardBody display='flex' flexDirection='column' justifyContent='space-between' p='0' position='relative'>
-                <Flex justifyContent='space-between' flexGrow='1' alignItems='center' p='12px' zIndex='5' h='85px' bg='white'>
+                <Flex justifyContent='space-between' flexGrow='1' alignItems='center' p='12px' zIndex='9' h='85px' bg='white'>
                     <Box display='flex' alignItems='center' gap='2'>
                         <Image
                             src={image.url}
@@ -46,6 +46,7 @@ const RecipeItem = ({id, image,name, ingredients, dispatch}: {id: string,image: 
                         />
                     </Box>
                 </Flex>
+                <Box w='100%' h={isClosed ? '35px' : '120px'} transition={isClosed ? '0.05s all ease-in' : '0.15s all ease-out'}></Box>
                 <Box w='100%' h='120px' display='flex' flexDirection='column' justifyContent='space-between' position='absolute' bg='white' transform={isClosed ? 'translateY(0px)' : 'translateY(85px)'} transition={isClosed ? '0.05s all ease-in' : '0.15s all ease-out'}>
                     <Box h='85px'>
                         {!isClosed && (
