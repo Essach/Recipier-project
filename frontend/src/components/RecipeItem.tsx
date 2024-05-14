@@ -1,12 +1,12 @@
 import { Box, Card, CardBody, Flex, Heading, IconButton, Image, List, useDisclosure } from "@chakra-ui/react";
 import { ChevronDownIcon, DeleteIcon} from "@chakra-ui/icons";
 import { useRef, useState } from "react";
-import { RecipeAction, RecipeIngredientProps, RecipePropsImage } from "../pages/Recipes";
+import { RecipeIngredientProps, RecipePropsImage } from "../pages/Recipes";
 import IngredientsListItem from "./IngredientsListItem";
 import RecipeDeleteDialog from "./RecipeDeleteDialog";
 
 
-const RecipeItem = ({id, image,name, ingredients, dispatch}: {id: string,image: RecipePropsImage,name: string, ingredients: Array<RecipeIngredientProps>, dispatch: (arg0: RecipeAction) => void}) => {
+const RecipeItem = ({ id, image, name, ingredients }: { id: string, image: RecipePropsImage, name: string, ingredients: Array<RecipeIngredientProps> }) => {
     
     const { isOpen, onOpen, onClose } = useDisclosure()
     const cancelRef = useRef(null)
