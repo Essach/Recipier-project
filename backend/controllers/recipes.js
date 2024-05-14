@@ -104,10 +104,10 @@ exports.postRecipe = async (request, response, next) => {
 
 exports.patchDeleteRecipe = async (request, response, next) => {
     try {
-        const recipeId = request.body.groceryId;
+        const recipeId = request.body.recipeId;
         const oldImagePath = request.body.oldImagePath;
 
-        const recipeRef = doc(db, "groceries", recipeId)
+        const recipeRef = doc(db, "recipes", recipeId)
         const recipeData = await getDoc(recipeRef);
 
         if (!recipeData) {
