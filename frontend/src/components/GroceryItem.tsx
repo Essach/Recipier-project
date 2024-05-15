@@ -103,7 +103,7 @@ const GroceryItem = ({id, image,name,quantity,quantityType, dispatch}: {id: stri
                         colorScheme='red'
                         onClick={handleSubtractQuantity}
                     />
-                    <Heading size='md' ml='10px'>{quantityType}</Heading>
+                    <Heading size='md' ml='10px'>{quantityType}s</Heading>
                 </Box>
             </CardBody>
         </Card>
