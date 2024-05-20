@@ -1,4 +1,4 @@
-import { Box, Button, ButtonGroup, Card, CardBody, CardFooter, CardHeader, Center, Divider, Heading, Image, Modal, ModalContent, ModalOverlay, Spinner, UnorderedList, useDisclosure } from "@chakra-ui/react";
+import { Box, Button, ButtonGroup, Card, CardBody, CardFooter, CardHeader, Center, Divider, Heading, Image as ChakraImage, Modal, ModalContent, ModalOverlay, Spinner, UnorderedList, useDisclosure } from "@chakra-ui/react";
 import { useContext, useState } from "react";
 import { StoreContext } from "../StoreProvider";
 import { RecipeIngredientProps, RecipeProps } from "./Recipes";
@@ -71,11 +71,17 @@ const Generate = () => {
             return
         }
 
-        
+        const img = new Image();
+        img.onload = function () {
+            setCardKey(Math.random())
+            setGeneratedRecipe(generatedRecipe)
+            setCurrentScene('recipe')
+        }
 
-        setCardKey(Math.random())
-        setGeneratedRecipe(generatedRecipe)
-        setCurrentScene('recipe')
+        img.src = generatedRecipe.image.url
+        // setCardKey(Math.random())
+        // setGeneratedRecipe(generatedRecipe)
+        // setCurrentScene('recipe')
         
     }
 
@@ -136,7 +142,7 @@ const Generate = () => {
                         </Heading>
                     </CardHeader>
                     <CardBody display='flex' justifyContent='center' flexDirection='column'>
-                        <Image src={generatedRecipe.image.url}/>
+                        <ChakraImage src={generatedRecipe.image.url}/>
                         <Box>
                             <UnorderedList display='grid' gridAutoFlow='column'
                             gridTemplateColumns='repeat(2, 1fr)'
