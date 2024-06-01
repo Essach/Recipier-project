@@ -12,6 +12,13 @@ server.use(cors());
 
 server.use('/groceries', groceryRouter);
 server.use('/recipes', recipeRouter);
+server.get("/*", function (req, res) {
+    res.sendFile(path.join(__dirname, "dist/index.html"), function (err) {
+    if (err) {
+        res.status(500).send(err);
+    }
+    });
+});
 
 server.listen(process.env.PORT ||  8000, () => console.log('Server is started...'));
 
