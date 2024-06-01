@@ -79,9 +79,6 @@ const Generate = () => {
         }
 
         img.src = generatedRecipe.image.url
-        // setCardKey(Math.random())
-        // setGeneratedRecipe(generatedRecipe)
-        // setCurrentScene('recipe')
         
     }
 
@@ -158,7 +155,7 @@ const Generate = () => {
                                     Generate again
                                 </Button>
                                 <Button variant='solid' colorScheme="teal" onClick={handleOnClickChoose}>
-                                    Choose this recipe
+                                    Use this recipe
                                 </Button>
                             </ButtonGroup>
                         </CardFooter>
