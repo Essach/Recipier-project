@@ -13,7 +13,7 @@ server.use(cors());
 server.use('/groceries', groceryRouter);
 server.use('/recipes', recipeRouter);
 
-server.listen(8000, () => console.log('Server is started...'));
+server.listen(process.env.PORT ||  8000, () => console.log('Server is started...'));
 
 module.exports = server
 
