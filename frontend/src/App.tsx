@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
+import { HashRouter, Route, Routes } from "react-router-dom"
 import Home from "./pages/Home."
 import Sidebar from "./components/Sidebar"
 import { Box, Flex } from "@chakra-ui/react"
@@ -8,7 +8,7 @@ import Groceries from "./pages/Groceries"
 
 function App() {
   return (
-    <Router>
+    <HashRouter>
       <Flex bg='whitesmoke' minW='100vw' minH='100vh'>
         <Sidebar />
         <Box flexGrow={1} w='calc(100vw - 70px)' ml='70px' px='8' py='5'>
@@ -20,7 +20,7 @@ function App() {
           </Routes>
         </Box>
       </Flex>
-    </Router>
+    </HashRouter>
   )
 }
 
