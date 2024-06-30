@@ -46,11 +46,11 @@ const RecipeItem = ({ id, image, name, ingredients }: { id: string, image: Recip
                         />
                     </Box>
                 </Flex>
-                <Box w='100%' h={isClosed ? '35px' : '120px'} transition={isClosed ? '0.05s all ease-in' : '0.15s all ease-out'}></Box>
+                <Box w='100%' h={isClosed ? '35px' : '200px'} transition={isClosed ? '0.05s all ease-in' : '0.15s all ease-out'}></Box>
                 <Box w='100%' h='120px' display='flex' flexDirection='column' justifyContent='space-between' position='absolute' bg='white' transform={isClosed ? 'translateY(0px)' : 'translateY(85px)'} transition={isClosed ? '0.05s all ease-in' : '0.15s all ease-out'}>
-                    <Box h='85px'>
+                    <Box h='165px'>
                         {!isClosed && (
-                            <List display='grid' h='85px' gridAutoFlow='column' gridTemplateRows='repeat(3,1fr)'
+                            <List display='grid' h='165px' gridAutoFlow='column' gridTemplateRows='repeat(3,1fr)'
                             gridTemplateColumns='repeat(3, 1fr)'
                             p='2px 12px'>
                                     {ingredients.map((ingredient: RecipeIngredientProps) => <IngredientsListItem key={Math.random()} {...ingredient} />)}
