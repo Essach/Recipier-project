@@ -1,5 +1,5 @@
 import { AddIcon } from "@chakra-ui/icons";
-import { Button, FormControl, FormErrorMessage, FormLabel, HStack, Image, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Radio, RadioGroup, Stack, Text } from "@chakra-ui/react";
+import { Button, FormControl, FormLabel, HStack, Image, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Radio, RadioGroup, Stack, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import request from "../helpers/request";
 import { useNavigate } from "react-router-dom";
@@ -34,6 +34,9 @@ const AddGroceryModal = ({isOpen, onClose}: AddGroceryModalProps) => {
     const handleChangeImage = (e: React.FormEvent<HTMLInputElement>) => {
         if (e.currentTarget.files === null) return
         const imgSrc = e.currentTarget.files[0];
+
+        console.log(imgSrc.size > 500000)
+
         if (imgSrc.size > 500000) {
             setFileErrorMessage('Files should not exceed 500KB size')
             setIsErrorFile(true);
@@ -127,10 +130,11 @@ const AddGroceryModal = ({isOpen, onClose}: AddGroceryModalProps) => {
                                     <Image src={URL.createObjectURL(image)}_hover={{cursor: 'pointer'}}/>}
                             </FormLabel>
                             <Input id="file-upload" type='file' display='none' onClick={handleFileInputClick} onChange={handleChangeImage} accept="image/jpeg, image/png, image/jpg"/>
-                            {isErrorFile && <FormErrorMessage>{fileErrorMessage}</FormErrorMessage>}
+                            {isErrorFile && <Text color='red'>                      {fileErrorMessage}
+                            </Text>}
                         </FormControl>
                         {isError &&
-                            <Text color='red'>
+                            <Text color='red' display='block'>
                                 *{errorMessage}
                             </Text>}
                     </Stack>

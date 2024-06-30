@@ -1,4 +1,4 @@
-import { Box, Button, FormControl, FormErrorMessage, FormLabel, Heading, Image, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text } from "@chakra-ui/react";
+import { Box, Button, FormControl, FormLabel, Heading, Image, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import request from "../helpers/request";
 import { useNavigate } from "react-router-dom";
@@ -164,7 +164,7 @@ const AddRecipeModal = ({isOpen, onClose}: AddRecipeModalProps) => {
                             <Input id="file-upload" type='file' display='none' onClick={handleFileInputClick} onChange={handleChangeImage}
                             accept="image/jpeg, image/png, image/jpg"
                             />
-                            {isErrorFile && <FormErrorMessage>{fileErrorMessage}</FormErrorMessage>}
+                            {isErrorFile && <Text color={'red'}>{fileErrorMessage}</Text>}
                         </FormControl>
                     </Box>
                     <Stack gap='5'>
