@@ -1,4 +1,4 @@
-import { AspectRatio, Box, Card, CardBody, Editable, EditableInput, EditablePreview, Flex, Heading, IconButton, Image, useDisclosure } from "@chakra-ui/react";
+import { Box, Card, CardBody, Editable, EditableInput, EditablePreview, Flex, Heading, IconButton, Image, useDisclosure } from "@chakra-ui/react";
 import { AddIcon, DeleteIcon, MinusIcon } from "@chakra-ui/icons";
 import { useRef, useState } from "react";
 import { GroceryAction, GroceryPropsImage } from "../pages/Groceries";
@@ -82,11 +82,13 @@ const GroceryItem = ({id, image,name,quantity,quantityType, dispatch}: {id: stri
                         colorScheme='green'
                         onClick={handleAddQuantity}
                     />
-                    <AspectRatio w='40px' ratio={1}>
                         <Editable
                             value={currentQuantity}
                             textAlign='center'
                             fontSize='xl'
+                            h='40px'
+                            px='5px'
+                            minW='40px'
                         >
                             <EditablePreview />
                             <EditableInput
@@ -96,7 +98,6 @@ const GroceryItem = ({id, image,name,quantity,quantityType, dispatch}: {id: stri
                                 onBlur={handleOnBlurQuantity}
                                 />
                         </Editable>
-                    </AspectRatio>
                     <IconButton
                         aria-label='Subtract 1 of this grocery'
                         icon={<MinusIcon />}
