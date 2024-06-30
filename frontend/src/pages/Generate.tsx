@@ -139,9 +139,9 @@ const Generate = () => {
                         </Heading>
                     </CardHeader>
                     <CardBody display='flex' justifyContent='center' flexDirection='column'>
-                        <ChakraImage src={generatedRecipe.image.url}/>
+                            <ChakraImage src={generatedRecipe.image.url} maxH={'50vh'} maxW={'50vw'} objectFit={'contain'}/>
                         <Box>
-                            <UnorderedList display='grid' gridAutoFlow='column'
+                            <UnorderedList display='grid' gridAutoFlow='row'
                             gridTemplateColumns='repeat(2, 1fr)'
                             pt='1.25rem'>
                                     {generatedRecipe.ingredients.map((ingredient: RecipeIngredientProps) => <GeneratedRecipeIngredient key={Math.random()} {...ingredient} />)}
