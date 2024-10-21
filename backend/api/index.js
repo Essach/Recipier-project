@@ -9,7 +9,14 @@ const recipeRouter = require("./routes/recipes.js");
 const server = express();
 
 server.use(bodyParser.json());
-server.use(cors());
+
+const corsOptions = {
+    origin: "*",
+    methods: "GET, HEAD, PUT, PATCH, POST, DELETE",
+    // other options
+};
+
+server.use(cors(corsOptions));
 
 server.use("/groceries", groceryRouter);
 server.use("/recipes", recipeRouter);
@@ -20,19 +27,19 @@ server.use("/recipes", recipeRouter);
 //     }
 //     });
 // });
-server.get("/", function (req, res) {
-    const options = {
-        root: path.join(__dirname),
-    };
+// server.get("/", function (req, res) {
+//     const options = {
+//         root: path.join(__dirname),
+//     };
 
-    res.sendFile("index.html", options, function (err) {
-        if (err) {
-            console.error("Error sending file:", err);
-        } else {
-            console.log("Sent:", fileName);
-        }
-    });
-});
+//     res.sendFile("index.html", options, function (err) {
+//         if (err) {
+//             console.error("Error sending file:", err);
+//         } else {
+//             console.log("Sent:", fileName);
+//         }
+//     });
+// });
 
 server.listen(process.env.PORT || 8000, function (err) {
     if (err) console.error(err);
